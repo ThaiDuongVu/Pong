@@ -15,6 +15,7 @@ font = pygame.font.Font("font.ttf", text_size)
 game_display = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(caption)
 
+clock = pygame.time.Clock()
 white = (230, 230, 230)
 black = (40, 40, 40)
 
@@ -174,8 +175,8 @@ def main_loop():
         player1_score_text = font.render(str(player1_score), True, white)
         player2_score_text = font.render(str(player2_score), True, white)
 
-        game_display.blit(player1_score_text, [100, 20])
-        game_display.blit(player2_score_text, [screen_width - 100 - text_size / 2, 20])
+        game_display.blit(player1_score_text, [screen_width / 4 - text_size / 4, 20])
+        game_display.blit(player2_score_text, [screen_width / 4 * 3 - text_size / 4, 20])
 
         if player1.x <= ball.x <= player1.x + player1.width:
             if player1.y <= ball.y <= player1.y + player1.height:
@@ -196,6 +197,7 @@ def main_loop():
             ball.__init__("left")
             player1_score += 1
 
+        clock.tick()
         pygame.display.update()
 
     quit_game()
