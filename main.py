@@ -1,7 +1,9 @@
 import pygame
 import sys
 from pygame.locals import *
+
 from ball import Ball
+from player import Player
 
 pygame.init()
 
@@ -24,43 +26,6 @@ white = (230, 230, 230)
 black = (40, 40, 40)
 
 start_text = text_font.render("Press Space to start", True, white)
-
-
-class Player:
-    def __init__(self, player_id):
-        self.color = white
-
-        self.width = 10
-        self.height = 60
-
-        self.distance = 30
-
-        self.y = screen_height / 2 - self.height / 2
-        if player_id == 1:
-            self.x = self.distance
-        elif player_id == 2:
-            self.x = screen_width - self.distance - self.width
-
-        self.speed = 0.5
-        self.speed_y = 0
-
-    def draw(self):
-        pygame.draw.rect(game_display, self.color, [self.x, self.y, self.width, self.height])
-        self.y += self.speed_y
-
-        if self.y < 0:
-            self.y = 0
-        if self.y > screen_height - self.height:
-            self.y = screen_height - self.height
-
-    def move_up(self):
-        self.speed_y = -self.speed
-
-    def move_down(self):
-        self.speed_y = self.speed
-
-    def stop(self):
-        self.speed_y = 0
 
 
 class Line:
@@ -92,8 +57,8 @@ def main_loop():
     line = Line()
     ball_object = Ball("none", white, screen_width, screen_height)
 
-    player1 = Player(1)
-    player2 = Player(2)
+    player1 = Player(1, white, screen_width, screen_height)
+    player2 = Player(2, white, screen_width, screen_height)
 
     player1_score = 0
     player2_score = 0
@@ -137,8 +102,8 @@ def main_loop():
             ball_object.draw(game_display)
         line.draw()
 
-        player1.draw()
-        player2.draw()
+        player1.draw(game_display, screen_height)
+        player2.draw(game_display, screen_height)
 
         if not start and not game_over:
             game_display.blit(start_text, [240, 200])
