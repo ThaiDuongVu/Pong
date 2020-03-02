@@ -4,6 +4,7 @@ from pygame.locals import *
 
 from ball import Ball
 from player import Player
+from line import Line
 
 pygame.init()
 
@@ -28,22 +29,6 @@ black = (40, 40, 40)
 start_text = text_font.render("Press Space to start", True, white)
 
 
-class Line:
-    def __init__(self):
-        self.color = white
-
-        self.width = 15
-        self.height = 25
-
-        self.x = screen_width / 2 - self.width / 2
-        self.y = 0
-
-    def draw(self):
-        for i in range(0, screen_height, self.height + 57):
-            self.y = i
-            pygame.draw.rect(game_display, self.color, [self.x, self.y, self.width, self.height])
-
-
 def quit_game():
     pygame.quit()
     sys.exit()
@@ -54,7 +39,7 @@ def main_loop():
     game_exit = False
     game_over = False
 
-    line = Line()
+    line = Line(white, screen_width)
     ball_object = Ball("none", white, screen_width, screen_height)
 
     player1 = Player(1, white, screen_width, screen_height)
@@ -100,7 +85,7 @@ def main_loop():
 
         if start:
             ball_object.draw(game_display)
-        line.draw()
+        line.draw(game_display, screen_height)
 
         player1.draw(game_display, screen_height)
         player2.draw(game_display, screen_height)
