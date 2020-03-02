@@ -1,8 +1,7 @@
 import pygame
 import sys
 from pygame.locals import *
-import ball
-from ball import Ball as Ball
+from ball import Ball
 
 pygame.init()
 
@@ -122,7 +121,7 @@ def main_loop():
                 if event.key == K_SPACE:
                     if not start:
                         start = True
-                        ball_object.__init__("left")
+                        ball_object.__init__("left", white, screen_width, screen_height)
                     if game_over:
                         main_loop()
 
@@ -163,11 +162,11 @@ def main_loop():
                 ball_object.change_direction_wall()
 
             if ball_object.x <= 0:
-                ball_object.__init__("right")
+                ball_object.__init__("right", white, screen_width, screen_height)
                 player2_score += 1
 
             if ball_object.x >= screen_width - ball_object.width:
-                ball_object.__init__("left")
+                ball_object.__init__("left", white, screen_width, screen_height)
                 player1_score += 1
 
         if (player1_score >= 5 and player2_score <= 3) or (player1_score >= 5 and player1_score >= player2_score + 2):
