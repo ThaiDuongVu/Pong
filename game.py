@@ -1,7 +1,8 @@
 import pygame
 import sys
-import random
 from pygame.locals import *
+import ball
+from ball import Ball as Ball
 
 pygame.init()
 
@@ -24,57 +25,6 @@ white = (230, 230, 230)
 black = (40, 40, 40)
 
 start_text = text_font.render("Press Space to start", True, white)
-
-
-class Ball:
-    def __init__(self, direction):
-        self.color = white
-
-        self.width = 10
-        self.height = 10
-
-        self.x = screen_width / 2 - self.width / 2
-        self.y = screen_height / 2 - self.height / 2
-
-        self.speed = 0.3
-
-        self.direction_horizontal = direction
-        self.direction_vertical = "up"
-
-        if self.direction_horizontal == "left":
-            self.speed_x = -self.speed
-        elif self.direction_horizontal == "right":
-            self.speed_x = self.speed
-        else:
-            self.speed_x = 0
-
-        self.speed_y = 0
-
-    def draw(self):
-        pygame.draw.rect(game_display, self.color, [self.x, self.y, self.width, self.height])
-
-        self.x += self.speed_x
-        self.y += self.speed_y
-
-    def change_direction_player(self):
-        if self.direction_horizontal == "left":
-            self.direction_horizontal = "right"
-            self.speed_x = self.speed
-
-        elif self.direction_horizontal == "right":
-            self.direction_horizontal = "left"
-            self.speed_x = -self.speed
-
-        self.speed_y = random.uniform(-self.speed, self.speed)
-
-    def change_direction_wall(self):
-        if self.direction_vertical == "up":
-            self.direction_vertical = "down"
-
-        elif self.direction_vertical == "down":
-            self.direction_vertical = "up"
-
-        self.speed_y = -self.speed_y
 
 
 class Player:
@@ -141,7 +91,7 @@ def main_loop():
     game_over = False
 
     line = Line()
-    ball = Ball("none")
+    ball_object = Ball("none", white, screen_width, screen_height)
 
     player1 = Player(1)
     player2 = Player(2)
@@ -172,7 +122,7 @@ def main_loop():
                 if event.key == K_SPACE:
                     if not start:
                         start = True
-                        ball.__init__("left")
+                        ball_object.__init__("left")
                     if game_over:
                         main_loop()
 
@@ -185,7 +135,7 @@ def main_loop():
         game_display.fill(black)
 
         if start:
-            ball.draw()
+            ball_object.draw(game_display)
         line.draw()
 
         player1.draw()
@@ -201,23 +151,23 @@ def main_loop():
         game_display.blit(player2_score_text, [screen_width / 4 * 3 - text_size / 4, 20])
 
         if not game_over:
-            if player1.x <= ball.x <= player1.x + player1.width:
-                if player1.y <= ball.y <= player1.y + player1.height:
-                    ball.change_direction_player()
+            if player1.x <= ball_object.x <= player1.x + player1.width:
+                if player1.y <= ball_object.y <= player1.y + player1.height:
+                    ball_object.change_direction_player()
 
-            if player2.x <= ball.x <= player2.x + player2.width:
-                if player2.y <= ball.y <= player2.y + player2.height:
-                    ball.change_direction_player()
+            if player2.x <= ball_object.x <= player2.x + player2.width:
+                if player2.y <= ball_object.y <= player2.y + player2.height:
+                    ball_object.change_direction_player()
 
-            if ball.y <= 0 or ball.y >= screen_height - ball.height:
-                ball.change_direction_wall()
+            if ball_object.y <= 0 or ball_object.y >= screen_height - ball_object.height:
+                ball_object.change_direction_wall()
 
-            if ball.x <= 0:
-                ball.__init__("right")
+            if ball_object.x <= 0:
+                ball_object.__init__("right")
                 player2_score += 1
 
-            if ball.x >= screen_width - ball.width:
-                ball.__init__("left")
+            if ball_object.x >= screen_width - ball_object.width:
+                ball_object.__init__("left")
                 player1_score += 1
 
         if (player1_score >= 5 and player2_score <= 3) or (player1_score >= 5 and player1_score >= player2_score + 2):
@@ -227,8 +177,8 @@ def main_loop():
             player_text = text_font.render("Player 1 wins", True, white)
             game_display.blit(player_text, [300, 200])
 
-            ball.speed_x = 0
-            ball.speed_y = 0
+            ball_object.speed_x = 0
+            ball_object.speed_y = 0
 
         if (player2_score >= 5 and player1_score <= 3) or (player2_score >= 5 and player2_score >= player1_score + 2):
             start = False
@@ -237,8 +187,8 @@ def main_loop():
             player_text = text_font.render("Player 2 wins", True, white)
             game_display.blit(player_text, [300, 200])
 
-            ball.speed_x = 0
-            ball.speed_y = 0
+            ball_object.speed_x = 0
+            ball_object.speed_y = 0
 
         clock.tick()
         pygame.display.update()
