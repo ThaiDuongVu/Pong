@@ -9,6 +9,7 @@ class Player:
         self.height = 60
 
         self.distance = 30
+        self.player_id = player_id
 
         self.y = screen_height / 2 - self.height / 2
         if player_id == 1:
@@ -44,3 +45,6 @@ class Player:
 
     def add_score(self):
         self.score += 1
+
+    def get_id(self):
+        return self.player_id

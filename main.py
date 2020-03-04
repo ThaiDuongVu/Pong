@@ -29,12 +29,12 @@ black = (40, 40, 40)
 start_text = text_font.render("Press Space to start", True, white)
 
 
-def check_collision_player(player_id, player, ball_object):
-    if player_id == 1:
+def check_collision_player(player, ball_object):
+    if player.get_id() == 1:
         if player.x <= ball_object.x <= player.x + player.width:
             if player.y <= ball_object.y <= player.y + player.height:
                 ball_object.change_direction_player()
-    elif player_id == 2:
+    else:
         if player.x <= ball_object.x <= player.x + player.width:
             if player.y <= ball_object.y <= player.y + player.height:
                 ball_object.change_direction_player()
@@ -51,6 +51,19 @@ def check_collision_wall(ball_object, player1, player2):
     if ball_object.x >= screen_width - ball_object.width:
         ball_object.__init__("left", white, screen_width, screen_height)
         player1.add_score()
+
+
+def show_score(player):
+    player_score_text = number_font.render(str(player.get_score()), True, white)
+
+    if player.get_id() == 1:
+        game_display.blit(player_score_text, [screen_width / 4 - text_size / 4, 20])
+    else:
+        game_display.blit(player_score_text, [screen_width / 4 * 3 - text_size / 4, 20])
+
+
+def player_win_control():
+    pass
 
 
 def quit_game():
@@ -114,15 +127,12 @@ def main_loop():
         if not start and not game_over:
             game_display.blit(start_text, [240, 200])
 
-        player1_score_text = number_font.render(str(player1.get_score()), True, white)
-        player2_score_text = number_font.render(str(player2.get_score()), True, white)
-
-        game_display.blit(player1_score_text, [screen_width / 4 - text_size / 4, 20])
-        game_display.blit(player2_score_text, [screen_width / 4 * 3 - text_size / 4, 20])
+        show_score(player1)
+        show_score(player2)
 
         if not game_over:
-            check_collision_player(1, player1, ball_object)
-            check_collision_player(2, player2, ball_object)
+            check_collision_player(player1, ball_object)
+            check_collision_player(player2, ball_object)
 
             check_collision_wall(ball_object, player1, player2)
 
