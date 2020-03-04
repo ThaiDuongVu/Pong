@@ -1,10 +1,11 @@
-import pygame
 import sys
+
+import pygame
 from pygame.locals import *
 
 from ball import Ball
-from player import Player
 from line import Line
+from player import Player
 
 pygame.init()
 
@@ -17,6 +18,8 @@ text_size = 32
 
 number_font = pygame.font.Font("font.ttf", number_text_size)
 text_font = pygame.font.Font("font.ttf", text_size)
+
+max_score = 5
 
 game_display = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(caption)
@@ -62,8 +65,28 @@ def show_score(player):
         game_display.blit(player_score_text, [screen_width / 4 * 3 - text_size / 4, 20])
 
 
-def player_win_control():
-    pass
+def player_win_actions(player, ball_object):
+    if player.get_id() == 1:
+        player_text = text_font.render("Player 1 wins", True, white)
+    else:
+        player_text = text_font.render("Player 2 wins", True, white)
+
+    game_display.blit(player_text, [300, 200])
+
+    ball_object.speed_x = 0
+    ball_object.speed_y = 0
+
+
+def player_win(player1, player2, ball_object):
+    if player1.get_score() >= max_score and player1.get_score() >= player2.get_score() + 2:
+        player_win_actions(player1, ball_object)
+        return True
+
+    elif player2.get_score() >= max_score and player2.get_score() >= player1.get_score() + 2:
+        player_win_actions(player2, ball_object)
+        return True
+
+    return False
 
 
 def quit_game():
@@ -136,25 +159,9 @@ def main_loop():
 
             check_collision_wall(ball_object, player1, player2)
 
-        if (player1.get_score() >= 5 and player2.get_score() <= 3) or (player1.get_score() >= 5 and player1.get_score() >= player2.get_score() + 2):
+        if player_win(player1, player2, ball_object):
             start = False
             game_over = True
-
-            player_text = text_font.render("Player 1 wins", True, white)
-            game_display.blit(player_text, [300, 200])
-
-            ball_object.speed_x = 0
-            ball_object.speed_y = 0
-
-        if (player2.get_score() >= 5 and player1.get_score() <= 3) or (player2.get_score() >= 5 and player2.get_score() >= player1.get_score() + 2):
-            start = False
-            game_over = True
-
-            player_text = text_font.render("Player 2 wins", True, white)
-            game_display.blit(player_text, [300, 200])
-
-            ball_object.speed_x = 0
-            ball_object.speed_y = 0
 
         clock.tick()
         pygame.display.update()
