@@ -29,6 +29,30 @@ black = (40, 40, 40)
 start_text = text_font.render("Press Space to start", True, white)
 
 
+def check_collision_player(player_id, player, ball_object):
+    if player_id == 1:
+        if player.x <= ball_object.x <= player.x + player.width:
+            if player.y <= ball_object.y <= player.y + player.height:
+                ball_object.change_direction_player()
+    elif player_id == 2:
+        if player.x <= ball_object.x <= player.x + player.width:
+            if player.y <= ball_object.y <= player.y + player.height:
+                ball_object.change_direction_player()
+
+
+def check_collision_wall(ball_object, player1_score, player2_score):
+    if ball_object.y <= 0 or ball_object.y >= screen_height - ball_object.height:
+        ball_object.change_direction_wall()
+
+    if ball_object.x <= 0:
+        ball_object.__init__("right", white, screen_width, screen_height)
+        player2_score += 1
+
+    if ball_object.x >= screen_width - ball_object.width:
+        ball_object.__init__("left", white, screen_width, screen_height)
+        player1_score += 1
+
+
 def quit_game():
     pygame.quit()
     sys.exit()
@@ -100,24 +124,10 @@ def main_loop():
         game_display.blit(player2_score_text, [screen_width / 4 * 3 - text_size / 4, 20])
 
         if not game_over:
-            if player1.x <= ball_object.x <= player1.x + player1.width:
-                if player1.y <= ball_object.y <= player1.y + player1.height:
-                    ball_object.change_direction_player()
+            check_collision_player(1, player1, ball_object)
+            check_collision_player(2, player2, ball_object)
 
-            if player2.x <= ball_object.x <= player2.x + player2.width:
-                if player2.y <= ball_object.y <= player2.y + player2.height:
-                    ball_object.change_direction_player()
-
-            if ball_object.y <= 0 or ball_object.y >= screen_height - ball_object.height:
-                ball_object.change_direction_wall()
-
-            if ball_object.x <= 0:
-                ball_object.__init__("right", white, screen_width, screen_height)
-                player2_score += 1
-
-            if ball_object.x >= screen_width - ball_object.width:
-                ball_object.__init__("left", white, screen_width, screen_height)
-                player1_score += 1
+            check_collision_wall(ball_object, player1_score, player2_score)
 
         if (player1_score >= 5 and player2_score <= 3) or (player1_score >= 5 and player1_score >= player2_score + 2):
             start = False
