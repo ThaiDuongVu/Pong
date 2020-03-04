@@ -40,17 +40,17 @@ def check_collision_player(player_id, player, ball_object):
                 ball_object.change_direction_player()
 
 
-def check_collision_wall(ball_object, player1_score, player2_score):
+def check_collision_wall(ball_object, player1, player2):
     if ball_object.y <= 0 or ball_object.y >= screen_height - ball_object.height:
         ball_object.change_direction_wall()
 
     if ball_object.x <= 0:
         ball_object.__init__("right", white, screen_width, screen_height)
-        player2_score += 1
+        player2.add_score()
 
     if ball_object.x >= screen_width - ball_object.width:
         ball_object.__init__("left", white, screen_width, screen_height)
-        player1_score += 1
+        player1.add_score()
 
 
 def quit_game():
@@ -68,9 +68,6 @@ def main_loop():
 
     player1 = Player(1, white, screen_width, screen_height)
     player2 = Player(2, white, screen_width, screen_height)
-
-    player1_score = 0
-    player2_score = 0
 
     while not game_exit:
         for event in pygame.event.get():
@@ -117,8 +114,8 @@ def main_loop():
         if not start and not game_over:
             game_display.blit(start_text, [240, 200])
 
-        player1_score_text = number_font.render(str(player1_score), True, white)
-        player2_score_text = number_font.render(str(player2_score), True, white)
+        player1_score_text = number_font.render(str(player1.get_score()), True, white)
+        player2_score_text = number_font.render(str(player2.get_score()), True, white)
 
         game_display.blit(player1_score_text, [screen_width / 4 - text_size / 4, 20])
         game_display.blit(player2_score_text, [screen_width / 4 * 3 - text_size / 4, 20])
@@ -127,9 +124,9 @@ def main_loop():
             check_collision_player(1, player1, ball_object)
             check_collision_player(2, player2, ball_object)
 
-            check_collision_wall(ball_object, player1_score, player2_score)
+            check_collision_wall(ball_object, player1, player2)
 
-        if (player1_score >= 5 and player2_score <= 3) or (player1_score >= 5 and player1_score >= player2_score + 2):
+        if (player1.get_score() >= 5 and player2.get_score() <= 3) or (player1.get_score() >= 5 and player1.get_score() >= player2.get_score() + 2):
             start = False
             game_over = True
 
@@ -139,7 +136,7 @@ def main_loop():
             ball_object.speed_x = 0
             ball_object.speed_y = 0
 
-        if (player2_score >= 5 and player1_score <= 3) or (player2_score >= 5 and player2_score >= player1_score + 2):
+        if (player2.get_score() >= 5 and player1.get_score() <= 3) or (player2.get_score() >= 5 and player2.get_score() >= player1.get_score() + 2):
             start = False
             game_over = True
 

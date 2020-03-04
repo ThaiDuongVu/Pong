@@ -19,6 +19,8 @@ class Player:
         self.speed = 0.5
         self.speed_y = 0
 
+        self.score = 0
+
     def draw(self, game_display, screen_height):
         pygame.draw.rect(game_display, self.color, [self.x, self.y, self.width, self.height])
         self.y += self.speed_y
@@ -36,3 +38,9 @@ class Player:
 
     def stop(self):
         self.speed_y = 0
+
+    def get_score(self):
+        return self.score
+
+    def add_score(self):
+        self.score += 1
