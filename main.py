@@ -4,7 +4,7 @@ import pygame
 from pygame.locals import *
 
 from ball import Ball
-from line import Line
+from separator import Separator
 from player import Player
 
 pygame.init()
@@ -57,12 +57,15 @@ def check_collision_wall(ball_object, player1, player2):
 
 
 def show_score(player):
-    player_score_text = number_font.render(str(player.get_score()), True, white)
+    player_score_text = number_font.render(
+        str(player.get_score()), True, white)
 
     if player.get_id() == 1:
-        game_display.blit(player_score_text, [screen_width / 4 - text_size / 4, 20])
+        game_display.blit(player_score_text, [
+                          screen_width / 4 - text_size / 4, 20])
     else:
-        game_display.blit(player_score_text, [screen_width / 4 * 3 - text_size / 4, 20])
+        game_display.blit(player_score_text, [
+                          screen_width / 4 * 3 - text_size / 4, 20])
 
 
 def player_win_actions(player, ball_object):
@@ -99,7 +102,7 @@ def main_loop():
     game_exit = False
     game_over = False
 
-    line = Line(white, screen_width)
+    separator = Separator(white, screen_width)
     ball_object = Ball("none", white, screen_width, screen_height)
 
     player1 = Player(1, white, screen_width, screen_height)
@@ -128,7 +131,8 @@ def main_loop():
                 if event.key == K_SPACE:
                     if not start:
                         start = True
-                        ball_object.__init__("left", white, screen_width, screen_height)
+                        ball_object.__init__(
+                            "left", white, screen_width, screen_height)
                     if game_over:
                         main_loop()
 
@@ -142,7 +146,7 @@ def main_loop():
 
         if start:
             ball_object.draw(game_display)
-        line.draw(game_display, screen_height)
+        separator.draw(game_display, screen_height)
 
         player1.draw(game_display, screen_height)
         player2.draw(game_display, screen_height)

@@ -1,7 +1,7 @@
 import pygame
 
 
-class Line:
+class Separator:
     def __init__(self, color, screen_width):
         self.color = color
 
