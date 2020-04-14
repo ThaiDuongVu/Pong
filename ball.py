@@ -27,7 +27,8 @@ class Ball:
         self.speed_y = 0
 
     def draw(self, game_display):
-        pygame.draw.rect(game_display, self.color, [self.x, self.y, self.width, self.height])
+        pygame.draw.rect(game_display, self.color, [
+                         self.x, self.y, self.width, self.height])
 
         self.x += self.speed_x
         self.y += self.speed_y

@@ -23,7 +23,8 @@ class Player:
         self.score = 0
 
     def draw(self, game_display, screen_height):
-        pygame.draw.rect(game_display, self.color, [self.x, self.y, self.width, self.height])
+        pygame.draw.rect(game_display, self.color, [
+                         self.x, self.y, self.width, self.height])
         self.y += self.speed_y
 
         if self.y < 0:

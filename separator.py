@@ -14,4 +14,5 @@ class Separator:
     def draw(self, game_display, screen_height):
         for i in range(0, screen_height, self.height + 57):
             self.y = i
-            pygame.draw.rect(game_display, self.color, [self.x, self.y, self.width, self.height])
+            pygame.draw.rect(game_display, self.color, [
+                             self.x, self.y, self.width, self.height])
