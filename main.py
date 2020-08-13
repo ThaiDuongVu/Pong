@@ -6,6 +6,7 @@ from pygame.locals import *
 from ball import Ball
 from separator import Separator
 from player import Player
+from direction import Direction
 
 pygame.init()
 
@@ -32,35 +33,16 @@ black = (34, 40, 49)
 start_text = text_font.render("Press Space to start", True, white)
 
 
-def check_collision_player(player, ball_object):
-    if player.x <= ball_object.x <= player.x + player.width:
-        if player.y <= ball_object.y <= player.y + player.height:
-            ball_object.change_direction_player()
-
-
-def check_collision_wall(ball_object, player1, player2):
-    if ball_object.y <= 0 or ball_object.y >= screen_height - ball_object.height:
-        ball_object.change_direction_wall()
-
-    if ball_object.x <= 0:
-        ball_object.__init__("right", white, screen_width, screen_height)
-        player2.add_score()
-
-    if ball_object.x >= screen_width - ball_object.width:
-        ball_object.__init__("left", white, screen_width, screen_height)
-        player1.add_score()
-
-
 def show_score(player):
     player_score_text = number_font.render(
         str(player.get_score()), True, white)
 
     if player.get_id() == 1:
         game_display.blit(player_score_text, [
-                          screen_width / 4 - text_size / 4, 20])
+                          (int)(screen_width / 4 - text_size / 4), 20])
     else:
         game_display.blit(player_score_text, [
-                          screen_width / 4 * 3 - text_size / 4, 20])
+                          (int)(screen_width / 4 * 3 - text_size / 4), 20])
 
 
 def player_win_actions(player, ball_object):
@@ -98,7 +80,7 @@ def main_loop():
     game_over = False
 
     separator = Separator(white, screen_width)
-    ball_object = Ball("none", white, screen_width, screen_height)
+    ball_object = Ball(Direction.No, white, screen_width, screen_height)
 
     player1 = Player(1, white, screen_width, screen_height)
     player2 = Player(2, white, screen_width, screen_height)
@@ -127,7 +109,7 @@ def main_loop():
                     if not start:
                         start = True
                         ball_object.__init__(
-                            "left", white, screen_width, screen_height)
+                            Direction.Left, white, screen_width, screen_height)
                     if game_over:
                         main_loop()
 
@@ -153,10 +135,24 @@ def main_loop():
         show_score(player2)
 
         if not game_over:
-            check_collision_player(player1, ball_object)
-            check_collision_player(player2, ball_object)
+            if ball_object.check_collision_player(player1):
+                ball_object.change_direction_horizontal()
 
-            check_collision_wall(ball_object, player1, player2)
+            if ball_object.check_collision_player(player2):
+                ball_object.change_direction_horizontal()
+
+            if ball_object.check_collision_wall(screen_height):
+                ball_object.change_direction_vertical()
+
+            if ball_object.check_score(player1, player2, screen_width, screen_height) == player1:
+                ball_object.__init__(Direction.Left, white,
+                                     screen_width, screen_height)
+                player1.add_score()
+
+            if ball_object.check_score(player1, player2, screen_width, screen_height) == player2:
+                ball_object.__init__(Direction.Right, white,
+                                     screen_width, screen_height)
+                player2.add_score()
 
         if player_win(player1, player2, ball_object):
             start = False
