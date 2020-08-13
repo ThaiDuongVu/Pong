@@ -26,21 +26,16 @@ pygame.display.set_caption(caption)
 
 clock = pygame.time.Clock()
 
-white = (230, 230, 230)
-black = (40, 40, 40)
+white = (238, 238, 238)
+black = (34, 40, 49)
 
 start_text = text_font.render("Press Space to start", True, white)
 
 
 def check_collision_player(player, ball_object):
-    if player.get_id() == 1:
-        if player.x <= ball_object.x <= player.x + player.width:
-            if player.y <= ball_object.y <= player.y + player.height:
-                ball_object.change_direction_player()
-    else:
-        if player.x <= ball_object.x <= player.x + player.width:
-            if player.y <= ball_object.y <= player.y + player.height:
-                ball_object.change_direction_player()
+    if player.x <= ball_object.x <= player.x + player.width:
+        if player.y <= ball_object.y <= player.y + player.height:
+            ball_object.change_direction_player()
 
 
 def check_collision_wall(ball_object, player1, player2):
