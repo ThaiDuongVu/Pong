@@ -13,7 +13,7 @@ class Ball:
         self.x = screen_width / 2 - self.width / 2
         self.y = screen_height / 2 - self.height / 2
 
-        self.speed = 0.3
+        self.speed = 1
 
         self.direction_horizontal = direction
         self.direction_vertical = Direction.Up

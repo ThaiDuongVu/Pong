@@ -17,7 +17,7 @@ class Player:
         elif player_id == 2:
             self.x = screen_width - self.distance - self.width
 
-        self.speed = 0.5
+        self.speed = 1.5
         self.speed_y = 0
 
         self.score = 0
