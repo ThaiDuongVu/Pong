@@ -1,29 +1,31 @@
 import sys
-
 import pygame
 from pygame.locals import *
 
+# Import neccessary classes
 from ball import Ball
-from separator import Separator
+from divider import Divider
 from player import Player
 from direction import Direction
 
+# Initialize pygame library
 pygame.init()
 
+# Set window size and caption
 screen_width = 800
 screen_height = 600
+game_surface = pygame.display.set_mode((screen_width, screen_height))
 caption = "PONG"
+pygame.display.set_caption(caption)
 
+# Initialize variables for displaying texts
 number_text_size = 72
 text_size = 32
-
 number_font = pygame.font.Font("font.ttf", number_text_size)
 text_font = pygame.font.Font("font.ttf", text_size)
 
+# Other global variables
 max_score = 5
-
-game_display = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption(caption)
 
 clock = pygame.time.Clock()
 
@@ -39,21 +41,17 @@ def display_score(player):
         str(player.get_score()), True, white)
 
     if player.get_id() == 1:
-        game_display.blit(player_score_text, [
+        game_surface.blit(player_score_text, [
                           (int)(screen_width / 4 - text_size / 4), 20])
     else:
-        game_display.blit(player_score_text, [
+        game_surface.blit(player_score_text, [
                           (int)(screen_width / 4 * 3 - text_size / 4), 20])
 
 
 # What to do when a player wins
 def player_win(player, ball):
-    if player.get_id() == 1:
-        player_text = text_font.render("Player 1 wins", True, white)
-    else:
-        player_text = text_font.render("Player 2 wins", True, white)
-
-    game_display.blit(player_text, [300, 200])
+    player_text = text_font.render("Player 1 wins", True, white) if player.get_id() == 1 else text_font.render("Player 2 wins", True, white)
+    game_surface.blit(player_text, [300, 200])
 
     ball.speed_x = 0
     ball.speed_y = 0
@@ -70,11 +68,13 @@ def winner(player1, player2, ball):
     return None
 
 
+# Quit current game
 def quit_game():
     pygame.quit()
     sys.exit()
 
 
+# Main game loop
 def main_loop():
     start = False
     game_exit = False
@@ -84,7 +84,7 @@ def main_loop():
     player2 = Player(2, white, screen_width, screen_height)
 
     ball = Ball(Direction.No, white, screen_width, screen_height)
-    separator = Separator(white, screen_width)
+    divider = Divider(white, screen_width)
 
     while not game_exit:
         for event in pygame.event.get():
@@ -125,18 +125,18 @@ def main_loop():
                     player2.stop()
 
         # Fill black background
-        game_display.fill(black)
+        game_surface.fill(black)
 
         # Render game objects and UI
         if start:
-            ball.draw(game_display)
-        separator.draw(game_display, screen_height)
+            ball.draw(game_surface)
+        divider.draw(game_surface, screen_height)
 
-        player1.draw(game_display, screen_height)
-        player2.draw(game_display, screen_height)
+        player1.draw(game_surface, screen_height)
+        player2.draw(game_surface, screen_height)
 
         if not start and not game_over:
-            game_display.blit(start_text, [240, 200])
+            game_surface.blit(start_text, [240, 200])
 
         display_score(player1)
         display_score(player2)
@@ -149,11 +149,11 @@ def main_loop():
             if ball.check_collision_wall(screen_height):
                 ball.change_direction_vertical()
 
-            if ball.check_score(player1, player2, screen_width, screen_height) == player1:
+            if ball.check_score(player1, player2, screen_width) == player1:
                 ball.__init__(Direction.Left, white,
                               screen_width, screen_height)
                 player1.add_score()
-            elif ball.check_score(player1, player2, screen_width, screen_height) == player2:
+            elif ball.check_score(player1, player2, screen_width) == player2:
                 ball.__init__(Direction.Right, white,
                               screen_width, screen_height)
                 player2.add_score()
@@ -165,10 +165,13 @@ def main_loop():
             start = False
             game_over = True
 
-        clock.tick()
+        # Render game at 60 fps
+        clock.tick(60)
         pygame.display.update()
 
     quit_game()
 
 
-main_loop()
+# Run main loop
+if __name__ == "__main__":
+    main_loop()
